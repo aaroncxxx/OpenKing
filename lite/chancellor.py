@@ -132,8 +132,21 @@ class Chancellor:
         if is_sensitive:
             log.warning(f"敏感任务检测: {task_id} 触发词={triggers}")
 
+        # 天气任务：注入实时天气数据（v2.9.2）
+        weather_data = ""
+        if any(kw in command for kw in ["天气", "预报", "降雨", "气温", "温度"]):
+            try:
+                from core.weather import fetch_all_weather
+                target = "day_after" if "大后天" in command else "tomorrow"
+                weather_data = fetch_all_weather(target=target)
+                log.info(f"天气数据注入: {len(weather_data)} chars")
+            except Exception as e:
+                log.warning(f"天气数据获取失败: {e}")
+
         # 知识预检索
         knowledge_context = await self._query_knowledge(command)
+        if weather_data:
+            knowledge_context = f"【实时天气数据】\n{weather_data}\n\n{knowledge_context}"
 
         # 丞相规划
         plan = await self._plan(task_id, command, knowledge_context)
@@ -217,13 +230,17 @@ class Chancellor:
         """v2.9: 根据任务关键词筛选相关 Agent"""
         cmd_lower = command.lower()
 
-        # 关键词 → 标签映射
+        # 关键词 → 标签映射（v2.9.2: 细化区分数据检索/API设计）
         keyword_tags = {
             "代码": ["执行", "编码"], "程序": ["执行", "编码"], "开发": ["执行", "编码"],
             "写": ["执行", "写作"], "文": ["执行", "写作"], "报告": ["执行", "写作"],
             "翻译": ["执行", "翻译"], "安全": ["安全", "监察"], "审计": ["安全", "监察"],
-            "搜索": ["执行", "检索"], "查": ["执行", "检索"], "数据": ["执行", "数据"],
-            "战略": ["参谋", "战略"], "分析": ["参谋", "分析"], "设计": ["执行", "设计"],
+            "搜索": ["执行", "检索"], "查": ["执行", "检索"], "调研": ["执行", "检索"],
+            "天气": ["执行", "检索", "爬取"], "预报": ["执行", "检索", "爬取"],
+            "降雨": ["执行", "检索", "爬取"], "气温": ["执行", "检索", "爬取"],
+            "数据": ["执行", "数据"], "统计": ["参谋", "分析"],
+            "战略": ["参谋", "战略"], "分析": ["参谋", "分析"],
+            "设计": ["执行", "设计"], "接口": ["执行", "接口"],
             "部署": ["执行", "部署"], "测试": ["执行", "测试"], "监控": ["执行", "监控"],
             "地方": ["地方", "郡守"], "军事": ["武将", "参谋·军事"],
         }
@@ -277,7 +294,7 @@ class Chancellor:
             "安全|审计|风险|检查": "jinyiwei",
             "翻译|英文|日文|多语言": "extra_ambassador",
             "创意|设计|美化|润色": "extra_treasury",
-            "趋势|预测|未来|预警": "special_astrologer",
+            "趋势|预测|未来|预警|天气|预报|降雨": "special_astrologer",
             "数据|分析|统计": "executor_analyst",
             "测试|验证|校验": "executor_tester",
             "部署|上线|发布": "executor_deployer",
