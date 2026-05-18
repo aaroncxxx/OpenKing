@@ -5,7 +5,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue?logo=python)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Version](https://img.shields.io/badge/Version-2.9-orange)
+![Version](https://img.shields.io/badge/Version-2.9.5-orange)
 ![Agents](https://img.shields.io/badge/Agents-256-purple)
 
 ## ✨ Features / 功能
