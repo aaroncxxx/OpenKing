@@ -132,13 +132,18 @@ class Chancellor:
         if is_sensitive:
             log.warning(f"敏感任务检测: {task_id} 触发词={triggers}")
 
-        # 天气任务：注入实时天气数据（v2.9.2）
+        # 天气任务：注入实时天气数据（v3.0: Open-Meteo 毫米级降雨量）
         weather_data = ""
         if any(kw in command for kw in ["天气", "预报", "降雨", "气温", "温度"]):
             try:
-                from core.weather import fetch_all_weather
-                target = "day_after" if "大后天" in command else "tomorrow"
-                weather_data = fetch_all_weather(target=target)
+                # 广东省专项：精确到毫米的逐小时降雨量
+                if any(kw in command for kw in ["广东", "粤", "广州", "深圳", "阳江", "珠海", "湛江", "茂名", "惠州", "汕头", "江门", "佛山", "东莞", "中山"]):
+                    from core.weather import fetch_guangdong_precipitation
+                    weather_data = fetch_guangdong_precipitation()
+                else:
+                    from core.weather import fetch_all_weather
+                    target = "day_after" if "大后天" in command else "tomorrow"
+                    weather_data = fetch_all_weather(target=target)
                 log.info(f"天气数据注入: {len(weather_data)} chars")
             except Exception as e:
                 log.warning(f"天气数据获取失败: {e}")
