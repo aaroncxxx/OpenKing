@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-帝国架构 v2.9 - CLI
-Empire Architecture v2.9
+帝国架构 v2.9.6 - CLI
+Empire Architecture v2.9.6
 
 用法:
   python3 main.py              # 交互模式
@@ -27,7 +27,7 @@ log = get_logger("cli")
 
 
 class EmpireCLI:
-    """帝国控制台 v2.9"""
+    """帝国控制台 v2.9.6"""
 
     def __init__(self):
         self.chancellor = Chancellor()
@@ -36,7 +36,7 @@ class EmpireCLI:
     def print_banner(self):
         print("""
 ╔══════════════════════════════════════════════════════╗
-║          Empire Architecture 2.9                     ║
+║          Empire Architecture 2.9.6                   ║
 ║──────────────────────────────────────────────────────║
 ║  皇帝: AARONCXXX         丞相: Mimo                  ║
 ║  节点: 256               知识层: 已挂载              ║
@@ -107,7 +107,7 @@ class EmpireCLI:
     def show_status(self):
         status = self.chancellor.get_status()
         print(f"\n{'═' * 50}")
-        print(f"帝国状态 v2.9")
+        print(f"帝国状态 v2.9.6")
         print(f"{'─' * 50}")
         print(f"节点数: {len(status['agents'])}")
         print(f"消息总数: {status['message_history']}")

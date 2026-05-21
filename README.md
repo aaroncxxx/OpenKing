@@ -1,11 +1,11 @@
-# 🏛️ Empire Architecture v2.9
+# 🏛️ Empire Architecture v2.9.6
 
 > 基于中国古代三公九卿制的 AI 多智能体协作系统
 > AI Multi-Agent Collaboration System Inspired by Ancient Chinese Governance
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue?logo=python)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Version](https://img.shields.io/badge/Version-2.9.5-orange)
+![Version](https://img.shields.io/badge/Version-2.9.6-orange)
 ![Agents](https://img.shields.io/badge/Agents-256-purple)
 
 ## ✨ Features / 功能
@@ -147,6 +147,7 @@ python3 skills/quantum_sim/quantum_cli.py bell          # Bell不等式
 
 | 版本 | 说明 |
 |------|------|
+| v2.9.6 | Open-Meteo API接入：毫米级降雨量、广东省21市逐小时数据、自动识别广东任务 |
 | v2.9 | 全面增强：标签路由/模型分级/任务队列/Agent记忆/中文分词/热加载 |
 | v2.1.2 | QComm 二进制协议 + GHZ/W 多比特纠缠 |
 | v2.1.1 | LHS 抽样 + 响应式 UI + WebGL 可视化 |

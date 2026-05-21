@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## v2.9.6 (Open-Meteo 毫米级降雨量)
+
+### 新增
+
+- **Open-Meteo API 接入**: 免费、无需 API Key，逐小时降水量（mm）
+- **广东省 21 地级市精确坐标**: 覆盖全省所有地级市，自动识别广东任务
+- **`fetch_guangdong_precipitation()`**: 过去 24h + 未来 6h 逐小时降雨量，按累计量排序
+- **`fetch_city_precipitation(city)`**: 单城市精确降雨数据，含温度/湿度/风速
+- **丞相智能路由**: 识别广东相关关键词，自动调用精确数据接口（降水量、广东、粤、阳江等）
+
+### 优化
+
+- `core/weather.py` v2.9.6: 从 wttr.in 升级到 Open-Meteo API
+- `chancellor.py`: 天气任务分支，广东专项 vs 通用天气
+- 兼容旧 `fetch_all_weather()` 接口，全国城市坐标保留
+
+### 数据源
+
+- Open-Meteo API: `api.open-meteo.com/v1/forecast`
+- 逐小时: precipitation(mm), precipitation_probability, temperature_2m, humidity, wind_speed
+
 ## v2.9.5 (天气数据修复版)
 
 ### 修复

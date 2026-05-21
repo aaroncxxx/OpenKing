@@ -1,4 +1,4 @@
-"""天气数据工具 v3.0 — Open-Meteo API（免费，无需 API Key，毫米级降雨量）
+"""天气数据工具 v2.9.6 — Open-Meteo API（免费，无需 API Key，毫米级降雨量）
 
 支持：
   - 逐小时降水量（mm）过去24h + 未来6h
@@ -71,7 +71,7 @@ def _fetch_open_meteo(lat: float, lon: float, timeout: int = 15) -> dict | None:
     """调用 Open-Meteo API 获取逐小时数据"""
     url = OPEN_METEO_URL.format(lat=lat, lon=lon)
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "EmpireBot/3.0"})
+        req = urllib.request.Request(url, headers={"User-Agent": "EmpireBot/2.9.6"})
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             return json.loads(resp.read())
     except Exception as e:

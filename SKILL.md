@@ -3,7 +3,7 @@ name: empire-architecture
 description: 帝国架构 — 基于中国古代三公九卿制的 AI 多智能体协作系统。256节点、标签路由、模型分级、任务队列、Agent记忆、量子计算思维模拟器。
 metadata:
   openclaw:
-    version: 2.9.5
+    version: 2.9.6
     author: aaroncxxx
     tags: [multi-agent, quantum, ai, collaboration, empire]
 ---

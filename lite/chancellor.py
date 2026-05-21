@@ -132,7 +132,7 @@ class Chancellor:
         if is_sensitive:
             log.warning(f"敏感任务检测: {task_id} 触发词={triggers}")
 
-        # 天气任务：注入实时天气数据（v3.0: Open-Meteo 毫米级降雨量）
+        # 天气任务：注入实时天气数据（v2.9.6: Open-Meteo 毫米级降雨量）
         weather_data = ""
         if any(kw in command for kw in ["天气", "预报", "降雨", "气温", "温度"]):
             try:
