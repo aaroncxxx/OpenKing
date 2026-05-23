@@ -88,45 +88,73 @@ class Agent:
 
         start_time = time.time()
 
-        try:
-            # v3.0: 统一 API 调用
-            result = call_llm_api(model_info, messages, creds["api_key"],
-                                  timeout=cfg["llm"]["timeout_seconds"])
+        # v3.1: 优雅降级 - 非 MIMO 模型失败时 fallback 到 MIMO
+        models_to_try = [model_info]
+        if model_info.get("alias", "mimo") != "mimo":
+            fallback = models.get("mimo", {}).copy()
+            fallback["alias"] = "mimo"
+            fallback["_fallback"] = True
+            models_to_try.append(fallback)
 
-            elapsed = time.time() - start_time
-            self._response_times.append(elapsed)
+        last_error = None
+        for attempt_model in models_to_try:
+            attempt_name = attempt_model.get("name", "mimo-v2.5-pro")
+            try:
+                result = call_llm_api(attempt_model, messages, creds["api_key"],
+                                      timeout=cfg["llm"]["timeout_seconds"])
 
-            # 追踪 token
-            self.tracker.log_usage(
-                self.state.agent_id,
-                result.get("input_tokens", 0),
-                result.get("output_tokens", 0),
-                model=model_name,
-            )
+                elapsed = time.time() - start_time
+                self._response_times.append(elapsed)
 
-            content = result["content"]
-            self.state.tasks_completed += 1
+                # 追踪 token（记录实际使用的模型）
+                actual_model = attempt_name
+                self.tracker.log_usage(
+                    self.state.agent_id,
+                    result.get("input_tokens", 0),
+                    result.get("output_tokens", 0),
+                    model=actual_model,
+                )
 
-            # 更新对话历史
-            self.conversation_history.append({"role": "user", "content": prompt[:500]})
-            self.conversation_history.append({"role": "assistant", "content": content[:500]})
+                content = result["content"]
+                self.state.tasks_completed += 1
 
-            # 记忆
-            self.memory.remember(
-                f"任务: {prompt[:100]}... → 成功 (model={model_name})",
-                importance=0.3, tags=["task", "success"],
-            )
+                # 如果是 fallback 模型，记录日志
+                if attempt_model.get("_fallback"):
+                    log.info(f"Fallback: {self.state.agent_id} {model_name}→{actual_model}")
+                    self.memory.remember(
+                        f"Fallback: {model_name} 失败，降级到 {actual_model}",
+                        importance=0.4, tags=["fallback"],
+                    )
 
-            # 更新平均响应时间
-            if self._response_times:
-                self.state.avg_response_time = sum(self._response_times) / len(self._response_times)
+                # 更新对话历史
+                self.conversation_history.append({"role": "user", "content": prompt[:500]})
+                self.conversation_history.append({"role": "assistant", "content": content[:500]})
 
-            return content
+                # 记忆
+                self.memory.remember(
+                    f"任务: {prompt[:100]}... → 成功 (model={actual_model})",
+                    importance=0.3, tags=["task", "success"],
+                )
 
-        except Exception as e:
-            self.state.tasks_failed += 1
-            self.memory.remember(f"任务失败: {e}", importance=0.6, tags=["error"])
-            return f"[ERROR] {str(e)}"
+                # 更新平均响应时间
+                if self._response_times:
+                    self.state.avg_response_time = sum(self._response_times) / len(self._response_times)
+
+                return content
+
+            except Exception as e:
+                last_error = e
+                if attempt_model.get("_fallback"):
+                    # fallback 也失败了
+                    log.error(f"Fallback 也失败: {self.state.agent_id}: {e}")
+                else:
+                    log.warning(f"模型调用失败，尝试 fallback: {self.state.agent_id} {attempt_name}: {e}")
+                continue
+
+        # 所有模型都失败
+        self.state.tasks_failed += 1
+        self.memory.remember(f"任务失败: {last_error}", importance=0.6, tags=["error"])
+        return f"[ERROR] {str(last_error)}"
 
     async def process_task(self, task_id: str, prompt: str, context: str = "",
                            task_type: str = "") -> str:

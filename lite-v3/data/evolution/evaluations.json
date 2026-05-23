@@ -1,0 +1,52 @@
+[
+  {
+    "task_id": "task_4401154d",
+    "agent_id": "advisor_strategy",
+    "quality_score": 0.7999999999999999,
+    "speed_score": 0.2,
+    "collaboration_score": 0.8,
+    "overall_score": 0.6799999999999999,
+    "feedback": "",
+    "timestamp": 1779500593.1545675
+  },
+  {
+    "task_id": "task_4401154d",
+    "agent_id": "advisor_tech",
+    "quality_score": 0.7999999999999999,
+    "speed_score": 0.2,
+    "collaboration_score": 0.8,
+    "overall_score": 0.6799999999999999,
+    "feedback": "",
+    "timestamp": 1779500593.1556404
+  },
+  {
+    "task_id": "task_4401154d",
+    "agent_id": "advisor_intel",
+    "quality_score": 0.7999999999999999,
+    "speed_score": 0.2,
+    "collaboration_score": 0.8,
+    "overall_score": 0.6799999999999999,
+    "feedback": "",
+    "timestamp": 1779500593.1558793
+  },
+  {
+    "task_id": "task_4401154d",
+    "agent_id": "executor_writer",
+    "quality_score": 0.1,
+    "speed_score": 0.2,
+    "collaboration_score": 0.8,
+    "overall_score": 0.33,
+    "feedback": "",
+    "timestamp": 1779500593.1563947
+  },
+  {
+    "task_id": "task_4401154d",
+    "agent_id": "executor_researcher",
+    "quality_score": 0.1,
+    "speed_score": 0.2,
+    "collaboration_score": 0.8,
+    "overall_score": 0.33,
+    "feedback": "",
+    "timestamp": 1779500593.1569102
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "long_term": [
+    {
+      "text": "任务失败: HTTP Error 401: Authorization Required",
+      "importance": 0.6,
+      "tags": [
+        "error"
+      ],
+      "task_id": "",
+      "time": 1779500563.1153903
+    }
+  ]
+}
