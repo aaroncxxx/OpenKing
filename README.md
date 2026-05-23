@@ -1,11 +1,11 @@
-# 🏛️ Empire Architecture v3.1.0
+# 🏛️ Empire Architecture v3.2.0
 
 > 基于中国古代三公九卿制的 AI 多智能体协作系统
 > AI Multi-Agent Collaboration System Inspired by Ancient Chinese Governance
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue?logo=python)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Version](https://img.shields.io/badge/Version-3.1.0-orange)
+![Version](https://img.shields.io/badge/Version-3.2.0-orange)
 ![Agents](https://img.shields.io/badge/Agents-256+-purple)
 
 ## ✨ 这是什么？

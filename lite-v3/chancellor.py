@@ -1,4 +1,4 @@
-"""帝国架构 v3.0 - 丞相协调器（自进化 + 多模型 + 自治 + 插件）"""
+"""帝国架构 v3.2 - 丞相协调器（自进化 + 多模型 + 自治 + 插件 + 因果推理 + 知识共享）"""
 import asyncio
 import json
 import re
@@ -10,6 +10,7 @@ from core.security import SecuritySystem
 from core.taskqueue import TaskQueue, Task, TaskStatus
 from core.model_router import select_model
 from core.memory import AgentMemory
+from core.memory3d import CausalMemoryGraph, ImperialLibrary
 from core.self_evolution import SelfEvolutionEngine
 from core.autonomous import AutonomousEngine, SelfHealer
 from core.plugins import PluginManager
@@ -51,7 +52,7 @@ def _extract_json(text: str) -> dict | None:
 
 
 class Chancellor:
-    """丞相 v3.0 - 六大方向全面升级"""
+    """丞相 v3.2 - 六大方向全面升级 + 因果推理 + 知识共享"""
 
     def __init__(self):
         self.config = load_empire_config()
@@ -67,6 +68,10 @@ class Chancellor:
         self.plugins = PluginManager()
         self.realtime = RealtimeEngine()
 
+        # v3.2: 全局因果图谱 + 帝国图书馆
+        self.causal_graph = CausalMemoryGraph()
+        self.library = ImperialLibrary()
+
         self.knowledge_router = None
         self.hanlin_director = None
         self.knowledge_audit = None
@@ -74,7 +79,8 @@ class Chancellor:
         self._init_agents()
         self._init_knowledge()
         self._init_evolution()
-        log.info(f"丞相 v3.0 初始化完成: {len(self.agents)} 节点就绪")
+        self._init_v32_memory()
+        log.info(f"丞相 v3.2 初始化完成: {len(self.agents)} 节点就绪")
 
     def _init_agents(self):
         """初始化所有节点"""
@@ -121,6 +127,14 @@ class Chancellor:
             if agent_id in self.agents:
                 self.agents[agent_id].system_prompt = evolved_prompt
                 log.info(f"恢复进化 prompt: {agent_id}")
+
+    def _init_v32_memory(self):
+        """v3.2: 将全局因果图谱和图书馆注入所有 Agent"""
+        for agent in self.agents.values():
+            agent.inject_causal(self.causal_graph)
+            agent.inject_library(self.library)
+        log.info(f"v3.2 记忆系统注入完成: 因果图谱={self.causal_graph.get_stats()['total_edges']}边, "
+                 f"图书馆={self.library.get_stats()['total_entries']}条知识")
 
     async def _query_knowledge(self, query: str, top_k: int = 3) -> str:
         if not self.knowledge_router:
@@ -400,7 +414,7 @@ class Chancellor:
 
     def get_status(self) -> dict:
         return {
-            "version": "3.0.0",
+            "version": "3.2.0",
             "agents": {aid: a.get_status() for aid, a in self.agents.items()},
             "tokens": self.tracker.get_usage(),
             "security": self.security.get_status(),
@@ -411,7 +425,18 @@ class Chancellor:
             "evolution": self.evolution.get_all_status(),
             "realtime": self.realtime.get_status(),
             "plugins": self.plugins.list_plugins(),
+            # v3.2
+            "causal_graph": self.causal_graph.get_stats(),
+            "library": self.library.get_stats(),
         }
+
+    # ──────────────── v3.2: 记忆系统生命周期 ────────────────
+
+    def memory_lifecycle_tick(self):
+        """v3.2: 全局记忆生命周期管理（定期调用）"""
+        for agent in self.agents.values():
+            agent.lifecycle_tick()
+        log.debug("v3.2 记忆生命周期 tick 完成")
 
     # ──────────────── v3.0: 实时监控管理 ────────────────
 

@@ -1,0 +1,4 @@
+[2026-05-23 10:14:35] empire.rbac INFO: 用户注册: u1 (角色: emperor)
+[2026-05-23 10:14:35] empire.rbac INFO: 认证成功: u1, session=MY6yfncw...
+[2026-05-23 10:14:35] empire.rbac INFO: 租户上下文激活: qin-dynasty
+[2026-05-23 10:14:35] empire.rbac INFO: 租户上下文释放: qin-dynasty

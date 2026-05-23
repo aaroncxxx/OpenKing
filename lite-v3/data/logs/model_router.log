@@ -1,1 +1,6 @@
 [2026-05-23 09:45:52] empire.model_router DEBUG: 关键词路由: code → deepseek-chat
+[2026-05-23 10:23:02] empire.model_router DEBUG: 关键词路由: code → deepseek-chat
+[2026-05-23 10:23:26] empire.model_router DEBUG: 角色路由: 执行·检索 → deepseek-chat
+[2026-05-23 10:23:34] empire.model_router DEBUG: 关键词路由: 分析 → mimo-v2.5-pro
+[2026-05-23 10:23:42] empire.model_router DEBUG: 关键词路由: 代码 → deepseek-chat
+[2026-05-23 10:23:51] empire.model_router DEBUG: 关键词路由: 代码 → deepseek-chat

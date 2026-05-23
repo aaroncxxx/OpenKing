@@ -48,5 +48,25 @@
     "overall_score": 0.33,
     "feedback": "",
     "timestamp": 1779500593.1569102
+  },
+  {
+    "task_id": "task_19915f2b",
+    "agent_id": "executor_researcher",
+    "quality_score": 0.8999999999999999,
+    "speed_score": 0.2,
+    "collaboration_score": 0.8,
+    "overall_score": 0.73,
+    "feedback": "",
+    "timestamp": 1779503031.8859923
+  },
+  {
+    "task_id": "task_19915f2b",
+    "agent_id": "executor_analyst",
+    "quality_score": 0.7999999999999999,
+    "speed_score": 0.2,
+    "collaboration_score": 0.8,
+    "overall_score": 0.6799999999999999,
+    "feedback": "",
+    "timestamp": 1779503031.8863568
   }
 ]

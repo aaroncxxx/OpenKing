@@ -1,0 +1,4 @@
+[2026-05-23 10:14:35] empire.security INFO: 身份注册: agent-001, 角色: ['executor']
+[2026-05-23 10:14:35] empire.security INFO: 加密后端: cryptography Fernet (AES-256)
+[2026-05-23 10:14:35] empire.security INFO: [审计] agent-001 access task/123 -> success
+[2026-05-23 10:14:35] empire.security INFO: [审计] agent-002 delete task/456 -> denied

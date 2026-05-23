@@ -1,5 +1,50 @@
 # CHANGELOG
 
+## v3.2.0 (六大方向深度升级 v2)
+
+### 🧠 方向一：思维向量通信 2.0
+- **多嵌入模型支持**: 抽象 EmbeddingProvider 基类，兼容 MiMo / OpenAI text-embedding-3 / Cohere embed-v3 / BGE
+- **EmbeddingManager**: 多 Provider 管理器，连续失败 3 次自动 fallback
+- **向量量化压缩**: VectorQuantizer INT8 标量量化 + 稀疏化，压缩率 75%+
+- **硬件加速**: VectorCompute 自动检测 PyTorch/CUDA，有则 GPU 加速，无则纯 Python
+- **标准化向量协议**: ThoughtVectorProtocol dataclass，JSON + 二进制序列化，跨平台兼容
+- **create_bus()**: 配置驱动工厂函数，一键创建向量总线
+
+### 🧠 方向二：记忆系统升级 — 因果推理与跨Agent知识迁移
+- **CausalMemoryGraph**: 因果图谱，正向推理/反向追溯/深度因果链(DFS)/树形可视化/JSON持久化
+- **ImperialLibrary**: 帝国图书馆，知识发布/搜索(带访问控制)/授权管理/版本回滚/标签+分类+作者三级索引
+- **MemoryDistiller**: 记忆蒸馏器，频率模式/共现模式/标签聚类，自动蒸馏+停用词过滤
+- **ProactiveRetriever**: 主动记忆检索器，触发规则注册/上下文变化自动检索/冷却机制
+
+### 🎨 方向三：多模态能力深化
+- **VideoProcessor**: 视频关键帧提取(ffmpeg) + 内容理解(MiMo Omni) + 摘要生成
+- **RealtimeStreamProcessor**: 音频实时流转写 + 实时翻译，异步生成器+回调双接口
+- **MultimodalRAG**: 跨模态检索，文本搜图/图搜文本，索引可持久化
+- **ImageGenerator**: 图像生成，MiMo + DALL-E 双 provider
+- **AudioGenerator**: TTS 文本转语音
+- **新增 Agent**: 钦天监(视频分析) + 造物使(音频/语音生成)
+
+### 🧠 方向四：自主执行增强
+- **GoTPlanner**: Graph of Thoughts 思维图规划器，目标→DAG分解/拓扑排序/并行层级/多路径合并/循环检测
+- **DynamicScheduler**: 动态资源调度，复杂度估算→模型等级→Agent数分配/DAG-Shapley/优先级队列+抢占式
+- **CheckpointManager**: 断点续传，暂停/恢复/迁移/JSON持久化/自动清理过期(7天TTL)
+- **SelfHealer v3.2**: 异常分类(网络/超时/模型/权限/资源)/指数退避+抖动/三态熔断器/优雅降级
+
+### 🔒 方向五：企业级安全与治理
+- **ZeroTrustEngine**: 零信任引擎，身份注册→策略添加→三重校验(ALLOW/DENY/CHALLENGE)
+- **DataEncryptor**: Fernet(AES-256-CBC+HMAC) 优先，回退 sha256+XOR+HMAC，字符串和字典按字段加密
+- **AuditLogger**: 全链路审计(who/action/resource/result/risk_level)，多维查询，导出合规报告
+- **RBAC**: 7角色(皇帝/丞相/三公/九卿/执行/监察/访客) × 8资源域权限矩阵
+- **AuthManager**: token认证/会话TTL/登录频率限制/批量吊销
+- **TenantContext**: 租户隔离上下文管理器，多帝国实例支持
+
+### 🛠️ 方向六：开发者体验提升
+- **Dashboard 全面升级**: 12项导航(总览/实时任务/Agent面板/消息总线/Token统计/记忆系统/安全审计/进化状态/检查点等)
+- **TaskDebugger**: 全链路追踪/性能分解/任务重放/执行对比
+- **LogAnalyzer**: 日志搜索/错误摘要/Agent活动报告
+- **SystemMonitor**: 8项健康检查/资源使用/导出调试报告
+- **CLI 入口**: `python -m core.debug_tools [health|errors|search|agent|export|resources]`
+
 ## v3.1.0 (六大方向深度升级)
 
 ### 🧠 方向一：思维向量通信 + DAG-Shapley + 增量更新

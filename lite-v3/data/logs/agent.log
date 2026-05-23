@@ -1,0 +1,8 @@
+[2026-05-23 10:23:03] empire.agent WARNING: 模型调用失败，尝试 fallback: chancellor deepseek-chat: HTTP Error 401: Authorization Required
+[2026-05-23 10:23:26] empire.agent INFO: Fallback: chancellor deepseek-chat→mimo-v2.5-pro
+[2026-05-23 10:23:26] empire.agent WARNING: 模型调用失败，尝试 fallback: executor_researcher deepseek-chat: HTTP Error 401: Authorization Required
+[2026-05-23 10:23:34] empire.agent INFO: Fallback: executor_researcher deepseek-chat→mimo-v2.5-pro
+[2026-05-23 10:23:43] empire.agent WARNING: 模型调用失败，尝试 fallback: chancellor deepseek-chat: HTTP Error 401: Authorization Required
+[2026-05-23 10:23:51] empire.agent INFO: Fallback: chancellor deepseek-chat→mimo-v2.5-pro
+[2026-05-23 10:23:52] empire.agent WARNING: 模型调用失败，尝试 fallback: jinyiwei deepseek-chat: HTTP Error 401: Authorization Required
+[2026-05-23 10:24:07] empire.agent INFO: Fallback: jinyiwei deepseek-chat→mimo-v2.5-pro

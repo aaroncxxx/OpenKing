@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-帝国架构 v3.0 - CLI
-Empire Architecture v3.0 - 六大方向全面升级
+帝国架构 v3.2 - CLI
+Empire Architecture v3.2 - 因果推理 + 跨Agent知识迁移 + 记忆蒸馏 + 主动检索
 
 用法:
   python3 main.py              # 交互模式
@@ -15,6 +15,8 @@ Empire Architecture v3.0 - 六大方向全面升级
   python3 main.py --plugins    # 插件列表
   python3 main.py --realtime   # 实时监控
   python3 main.py --dashboard  # 启动可视化大屏
+  python3 main.py --causal     # 因果图谱
+  python3 main.py --library    # 帝国图书馆
 """
 import asyncio
 import json
@@ -39,12 +41,13 @@ class EmpireCLI:
     def print_banner(self):
         print("""
 ╔══════════════════════════════════════════════════════════════╗
-║              Empire Architecture 3.0.0                       ║
+║              Empire Architecture 3.2.0                       ║
 ║──────────────────────────────────────────────────────────────║
 ║  皇帝: AARONCXXX         丞相: MIMO                          ║
 ║  节点: 256+              知识层: 已挂载                      ║
 ║──────────────────────────────────────────────────────────────║
 ║  🧠 自进化  🌐 多模型  🔌 插件  📡 实时  🎨 大屏  🤖 自治   ║
+║  🔗 因果推理  📚 帝国图书馆  🧪 记忆蒸馏  🔍 主动检索       ║
 ╚══════════════════════════════════════════════════════════════╝
         """)
 
@@ -64,6 +67,17 @@ class EmpireCLI:
   memory <id>      Agent 记忆
   bus              消息总线
   history          消息历史
+
+  ─── v3.2 记忆系统 ───
+  causal           因果图谱状态与可视化
+  causal add <因> <果> [置信度]  添加因果关系
+  causal infer <节点> [forward|backward]  因果推理
+  library          帝国图书馆状态
+  library search <关键词>  搜索共享知识
+  library publish <内容> [--tags a,b] [--cat 分类]  发布知识
+  distill [agent_id]  执行记忆蒸馏
+  proactive        主动检索器状态
+
   help             帮助
   exit / quit      退出
         """)
@@ -275,6 +289,23 @@ class EmpireCLI:
                     self.show_history()
                 elif cmd == "dashboard":
                     print("启动 Dashboard... 请运行: streamlit run dashboard/app.py")
+                # ─── v3.2 记忆系统命令 ───
+                elif cmd == "causal":
+                    self.show_causal()
+                elif cmd.startswith("causal add "):
+                    self.cmd_causal_add(cmd[11:].strip())
+                elif cmd.startswith("causal infer "):
+                    self.cmd_causal_infer(cmd[14:].strip())
+                elif cmd == "library":
+                    self.show_library()
+                elif cmd.startswith("library search "):
+                    self.cmd_library_search(cmd[16:].strip())
+                elif cmd.startswith("library publish "):
+                    self.cmd_library_publish(cmd[17:].strip())
+                elif cmd.startswith("distill"):
+                    self.cmd_distill(cmd[7:].strip())
+                elif cmd == "proactive":
+                    self.show_proactive()
                 else:
                     await self.execute_command(cmd)
 
@@ -313,6 +344,176 @@ class EmpireCLI:
             ts = time.strftime("%H:%M:%S", time.localtime(msg.timestamp))
             print(f"  [{ts}] {msg.sender} → {msg.receiver}: {msg.content[:80]}")
 
+    # ──────────────── v3.2: 因果图谱命令 ────────────────
+
+    def show_causal(self):
+        cg = self.chancellor.causal_graph
+        stats = cg.get_stats()
+        print(f"\n{'═' * 50}")
+        print(f"🔗 因果记忆图谱")
+        print(f"{'─' * 50}")
+        print(f"  节点数: {stats['total_nodes']}")
+        print(f"  关系数: {stats['total_edges']}")
+        print(f"  因源数: {stats['forward_sources']}")
+        print(f"  果目标: {stats['backward_targets']}")
+
+        nodes = cg.get_all_nodes()
+        if nodes:
+            print(f"\n  所有节点: {', '.join(sorted(nodes))}")
+            # 显示最近的因果关系
+            recent = sorted(cg._edges.values(), key=lambda e: -e.timestamp)[:10]
+            if recent:
+                print(f"\n  最近的因果关系:")
+                for e in recent:
+                    print(f"    {e.cause} → {e.effect} [置信度 {e.confidence:.0%}]")
+
+    def cmd_causal_add(self, args: str):
+        parts = args.split()
+        if len(parts) < 2:
+            print("  用法: causal add <因> <果> [置信度]")
+            return
+        cause, effect = parts[0], parts[1]
+        confidence = float(parts[2]) if len(parts) > 2 else 0.7
+        edge = self.chancellor.causal_graph.add_cause_effect(cause, effect, confidence)
+        print(f"  ✅ 添加因果关系: {cause} → {effect} [置信度 {confidence:.0%}] (id={edge.edge_id})")
+
+    def cmd_causal_infer(self, args: str):
+        parts = args.split()
+        if not parts:
+            print("  用法: causal infer <节点> [forward|backward]")
+            return
+        node = parts[0]
+        direction = parts[1] if len(parts) > 1 else "forward"
+        cg = self.chancellor.causal_graph
+
+        if direction == "forward":
+            results = cg.infer_effects(node)
+            label = "结果"
+        else:
+            results = cg.infer_causes(node)
+            label = "原因"
+
+        if not results:
+            print(f"  未找到「{node}」的{label}")
+            return
+
+        print(f"\n  「{node}」的可能{label}:")
+        for name, conf in results:
+            print(f"    → {name} [置信度 {conf:.0%}]")
+
+        # 显示因果链
+        viz = cg.visualize_chain(node, direction=direction)
+        print(f"\n{viz}")
+
+    # ──────────────── v3.2: 帝国图书馆命令 ────────────────
+
+    def show_library(self):
+        lib = self.chancellor.library
+        stats = lib.get_stats()
+        print(f"\n{'═' * 50}")
+        print(f"📚 帝国图书馆")
+        print(f"{'─' * 50}")
+        print(f"  知识条目: {stats['total_entries']}")
+        print(f"  标签数: {stats['total_tags']}")
+        print(f"  作者数: {stats['total_authors']}")
+        if stats['categories']:
+            print(f"\n  分类分布:")
+            for cat, count in stats['categories'].items():
+                print(f"    {cat}: {count} 条")
+
+    def cmd_library_search(self, query: str):
+        if not query:
+            print("  用法: library search <关键词>")
+            return
+        results = self.chancellor.library.search_knowledge(query, top_k=5)
+        if not results:
+            print(f"  未找到「{query}」相关知识")
+            return
+        print(f"\n  搜索「{query}」结果 ({len(results)} 条):")
+        for i, entry in enumerate(results, 1):
+            tags = ", ".join(entry.tags[:5]) if entry.tags else "无标签"
+            print(f"  {i}. [{entry.category}] {entry.content[:80]}")
+            print(f"     作者: {entry.author} | 标签: {tags} | 版本: v{entry.version}")
+
+    def cmd_library_publish(self, args: str):
+        if not args:
+            print("  用法: library publish <内容> [--tags a,b] [--cat 分类]")
+            return
+        # 解析参数
+        content = args
+        tags = []
+        category = "general"
+        if "--tags" in args:
+            parts = args.split("--tags")
+            content = parts[0].strip()
+            tag_part = parts[1].split("--")[0].strip() if "--" in parts[1] else parts[1].strip()
+            tags = [t.strip() for t in tag_part.split(",") if t.strip()]
+        if "--cat" in args:
+            parts = args.split("--cat")
+            if not content or content == args.split("--cat")[0]:
+                content = parts[0].strip()
+            category = parts[1].strip().split()[0] if parts[1].strip() else "general"
+
+        entry = self.chancellor.library.publish_knowledge(
+            "cli_user", content, tags=tags, category=category,
+        )
+        print(f"  ✅ 发布知识: {entry.knowledge_id}")
+        print(f"     内容: {content[:80]}")
+        print(f"     分类: {category} | 标签: {', '.join(tags) if tags else '无'}")
+
+    # ──────────────── v3.2: 记忆蒸馏命令 ────────────────
+
+    def cmd_distill(self, agent_id: str):
+        if agent_id:
+            # 指定 agent
+            agent = self.chancellor.agents.get(agent_id)
+            if not agent or not agent.distiller:
+                print(f"  未知节点或该节点无蒸馏器: {agent_id}")
+                return
+            distiller = agent.distiller
+        else:
+            # 全局蒸馏
+            print(f"  对所有 Agent 执行记忆蒸馏...")
+            total_new = 0
+            for aid, agent in self.chancellor.agents.items():
+                if agent.distiller:
+                    new = agent.distiller.distill()
+                    total_new += len(new)
+                    if new:
+                        print(f"    {aid}: 蒸馏出 {len(new)} 条规律")
+            print(f"  ✅ 全局蒸馏完成: 共 {total_new} 条新规律")
+            return
+
+        results = distiller.distill()
+        if results:
+            print(f"\n  蒸馏出 {len(results)} 条新规律:")
+            for d in results:
+                print(f"    · {d.pattern} [置信度 {d.confidence:.0%}, 证据 {d.evidence_count}]")
+        else:
+            print(f"  无新规律（数据不足或已全部蒸馏）")
+
+        summary = distiller.get_distillate_summary()
+        if summary:
+            print(f"\n{summary}")
+
+    # ──────────────── v3.2: 主动检索命令 ────────────────
+
+    def show_proactive(self):
+        print(f"\n{'═' * 50}")
+        print(f"🔍 主动记忆检索器")
+        print(f"{'─' * 50}")
+        total_rules = 0
+        total_enabled = 0
+        for aid, agent in self.chancellor.agents.items():
+            if agent.retriever:
+                stats = agent.retriever.get_stats()
+                total_rules += stats['total_rules']
+                total_enabled += stats['enabled_rules']
+                if stats['total_rules'] > 0:
+                    print(f"  {aid}: {stats['total_rules']} 规则 ({stats['enabled_rules']} 启用)")
+
+        print(f"\n  总计: {total_rules} 规则 ({total_enabled} 启用)")
+
 
 async def main():
     cli = EmpireCLI()
@@ -333,6 +534,10 @@ async def main():
             cli.show_plugins()
         elif arg == "--realtime":
             cli.show_realtime()
+        elif arg == "--causal":
+            cli.show_causal()
+        elif arg == "--library":
+            cli.show_library()
         elif arg == "--auto" and len(sys.argv) > 2:
             command = " ".join(sys.argv[2:])
             await cli.execute_command(command, autonomous=True)
