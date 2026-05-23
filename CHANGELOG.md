@@ -1,5 +1,48 @@
 # CHANGELOG
 
+## v3.1.0 (六大方向深度升级)
+
+### 🧠 方向一：思维向量通信 + DAG-Shapley + 增量更新
+- **思维向量通信**: MiMo Embedding 接口，Agent 用向量而非自然语言通信，token 消耗削减 75%
+- **ThoughtVectorBus**: 向量消息总线，语义检索历史思维
+- **向量压缩**: 随机投影降维，保留语义信息
+- **DAG-Shapley 调度**: Shapley 值精确测量 Agent 贡献，动态资源分配
+- **任务 DAG**: 拓扑排序，独立任务并行，依赖任务串行
+- **冗余消除**: 同 Agent 相似任务自动合并
+- **增量更新**: JSON diff 算法，只传递变化部分，减少通信开销
+
+### 🧠 方向二：三维记忆系统升级
+- **Forms-Functions-Dynamics 框架**: 形式层(Token/参数/潜在) × 功能层(情景/语义/程序) × 动态层(形成/巩固/检索/遗忘/更新)
+- **MemoryEngram**: 记忆印迹，包含强度/巩固度/访问计数/关联
+- **自适应衰退**: 重要性/访问频率/巩固程度抵抗衰退，避免记忆过载
+- **共享记忆空间**: 导出/导入共享记忆，隐私分级过滤
+- **生命周期管理**: consolidate() + forget() + lifecycle_tick()
+
+### 🎨 方向三：多模态能力增强
+- **MiMoOmniClient**: 图像分析 + 音频转录 + 文本生成统一接口
+- **MultimodalRouter**: 根据输入类型自动选择处理方式
+- **多模态 Agent 集群**: 画师营(图像) + 乐坊(音频) + 鸿胪寺译馆(跨模态)
+- **跨模态语义对齐**: 图像描述↔文字↔提示词
+
+### 🔌 方向四：协议标准化（MCP + A2A）
+- **MCP Server**: 工具/资源/Prompt 标准化注册与调用
+- **MCP Client**: 连接外部 MCP Server
+- **A2A Server**: Agent Card + 任务处理，兼容 Google A2A 规范
+- **A2A Client**: 发现远程 Agent + 发送任务
+- **EmpireAPI**: OpenAPI 规格 + RESTful 接口
+- **LangChain/AutoGen 对接**: 标准协议接口
+
+### 🧠 方向五：自我进化增强
+- **闭环优化器**: 性能评估→贡献测量→瓶颈识别→提示优化→系统更新
+- **自动 Prompt 工程**: 借鉴 DSPy/AutoPrompt，根据成功/失败案例自动优化 prompt
+- **经验库**: 成功任务流程保存/检索/复用，Experience Library
+
+### 🐳 方向六：部署架构升级
+- **Docker**: Dockerfile + docker-compose.yml（CLI + Dashboard + Ollama）
+- **Kubernetes**: Deployment + Service + HPA 清单
+- **轻量版**: lite-edge/ 最小化依赖，边缘设备可用
+- **健康检查**: 内置 liveness probe
+
 ## v3.0.0 (六方向全面升级)
 
 ### 🧠 自进化系统
