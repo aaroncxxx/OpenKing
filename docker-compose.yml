@@ -1,0 +1,55 @@
+# Empire Architecture v3.1 - Docker Compose
+version: '3.8'
+
+services:
+  # 主服务 - 帝国 CLI
+  empire:
+    build: .
+    container_name: empire-cli
+    restart: unless-stopped
+    environment:
+      - MIMO_API_KEY=${MIMO_API_KEY}
+      - MIMO_API_ENDPOINT=${MIMO_API_ENDPOINT:-https://api.xiaomimimo.com/v1}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./data:/app/data
+      - ./config.json:/app/config.json
+    stdin_open: true
+    tty: true
+
+  # Dashboard - Streamlit 可视化大屏
+  dashboard:
+    build: .
+    container_name: empire-dashboard
+    restart: unless-stopped
+    command: streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0
+    environment:
+      - MIMO_API_KEY=${MIMO_API_KEY}
+      - MIMO_API_ENDPOINT=${MIMO_API_ENDPOINT:-https://api.xiaomimimo.com/v1}
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./config.json:/app/config.json
+
+  # Ollama - 本地模型（可选）
+  ollama:
+    image: ollama/ollama:latest
+    container_name: empire-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+volumes:
+  ollama_data:

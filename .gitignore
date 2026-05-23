@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+data/logs/*.log
+data/tokens.db
+data/memory/*.json
+data/evolution/*.json
+data/experience/*.json
+.env
