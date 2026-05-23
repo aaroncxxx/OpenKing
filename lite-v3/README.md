@@ -22,11 +22,13 @@ core/
 ├── multimodal.py      # 多模态处理
 ├── self_evolution.py  # 自我进化
 ├── plugins.py         # 插件系统
+├── debug_tools.py     # 调试与监控工具（v3.2 DX）
 └── ...
 
 agents/                # Agent 实现
 data/                  # 持久化数据
-dashboard/             # 可视化面板
+dashboard/
+└── app.py             # Web 管理界面（v3.2 DX, Streamlit）
 knowledge/             # 知识库
 ```
 
@@ -258,7 +260,71 @@ python3 main.py --library    # 帝国图书馆
 |------|------|
 | v3.0 | 三维记忆框架基础（形式/功能/动态） |
 | v3.1 | 记忆巩固、衰退、共享记忆空间 |
-| **v3.2** | **因果推理、帝国图书馆、记忆蒸馏、主动检索** |
+| v3.2 | 因果推理、帝国图书馆、记忆蒸馏、主动检索 |
+| **v3.2 DX** | **开发者体验全面提升：Web 管理界面 + 调试监控工具链** |
+
+### v3.2 DX — 开发者体验提升
+
+#### 完整 Web 管理界面 (`dashboard/app.py`)
+
+Streamlit 大屏全面升级，12 个功能模块：
+
+| 模块 | 功能 |
+|------|------|
+| 📊 总览 | 核心指标、节点状态分布、Top Agent 排行 |
+| ⚡ 实时任务 | 执行中任务进度条、耗时追踪、完成/失败列表 |
+| 👥 Agent 面板 | 状态筛选排序、评分等级、记忆统计、进化指标 |
+| 💬 消息总线 | 实时消息流可视化、类型筛选、Agent 通信矩阵 |
+| 💰 Token 统计 | SQLite 按模型/Agent/时间统计、成本图表、每日趋势 |
+| 🧠 记忆系统 | 各 Agent 记忆量、重要性分布、因果图、蒸馏知识 |
+| 🔒 安全审计 | 审计日志搜索、敏感词违规、零信任事件、RBAC 状态 |
+| 🧬 进化状态 | 等级分布、评分排行、晋降级历史、瓶颈分析 |
+| 📸 检查点管理 | 查看/恢复/删除/创建检查点、过期清理 |
+| 🌐 模型路由 | 模型配置与使用统计 |
+| 🔌 插件系统 | 插件发现与安装 |
+| 💬 任务执行 | 指令下达与结果展示 |
+
+```bash
+streamlit run dashboard/app.py
+```
+
+#### 调试与监控工具 (`core/debug_tools.py`)
+
+三大调试类，支持 CLI 直接调用：
+
+```python
+from core.debug_tools import TaskDebugger, LogAnalyzer, SystemMonitor
+
+# 任务调试
+td = TaskDebugger()
+td.trace_task("task_id")                    # 全链路追踪
+td.get_performance_breakdown("task_id")     # 性能分解
+td.replay_task("task_id", dry_run=True)     # 重放执行
+td.compare_runs("task_1", "task_2")         # 对比两次执行
+
+# 日志分析
+la = LogAnalyzer()
+la.search_logs("error", level="ERROR")      # 日志搜索
+la.get_error_summary(hours=24)              # 错误摘要
+la.get_agent_activity("agent_id")           # Agent 活动报告
+
+# 系统监控
+sm = SystemMonitor()
+sm.get_system_health()                      # 健康检查
+sm.get_resource_usage()                     # 资源使用
+sm.export_debug_report()                    # 导出调试报告
+```
+
+CLI 快捷命令：
+
+```bash
+python -m core.debug_tools health           # 系统健康检查
+python -m core.debug_tools errors 24        # 错误摘要
+python -m core.debug_tools search "keyword" # 日志搜索
+python -m core.debug_tools agent <id>       # Agent 活动
+python -m core.debug_tools export           # 导出报告
+python -m core.debug_tools resources        # 资源使用
+```
 
 ### v3.2 集成架构
 

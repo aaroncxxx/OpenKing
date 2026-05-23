@@ -248,8 +248,8 @@ def page_realtime_tasks():
 
     # 任务概览
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("等待中", tq_status.get("pending", 0))
-    col2.metric("执行中", tq_status.get("running", 0))
+    col1.metric("已提交", tq_status.get("submitted", 0))
+    col2.metric("队列中", tq_status.get("queue_size", 0))
     col3.metric("已完成", tq_status.get("completed", 0))
     col4.metric("失败", tq_status.get("failed", 0))
 
