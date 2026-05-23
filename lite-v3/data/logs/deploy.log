@@ -1,5 +1,0 @@
-[2026-05-23 09:38:48] empire.deploy INFO: Dockerfile 生成: /root/.openclaw/workspace/Empire-Architecture/lite-v3/Dockerfile
-[2026-05-23 09:38:48] empire.deploy INFO: docker-compose.yml 生成: /root/.openclaw/workspace/Empire-Architecture/lite-v3/docker-compose.yml
-[2026-05-23 09:38:48] empire.deploy INFO: K8s 清单生成: /root/.openclaw/workspace/Empire-Architecture/lite-v3/k8s/
-[2026-05-23 09:38:48] empire.deploy INFO: 轻量版生成: /root/.openclaw/workspace/Empire-Architecture/lite-v3/lite-edge/
-[2026-05-23 09:38:48] empire.deploy INFO: 所有部署文件生成完成

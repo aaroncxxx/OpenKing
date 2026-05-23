@@ -91,7 +91,8 @@ class Agent:
         # v3.1: 优雅降级 - 非 MIMO 模型失败时 fallback 到 MIMO
         models_to_try = [model_info]
         if model_info.get("alias", "mimo") != "mimo":
-            fallback = models.get("mimo", {}).copy()
+            all_models = cfg.get("models", {})
+            fallback = all_models.get("mimo", {}).copy()
             fallback["alias"] = "mimo"
             fallback["_fallback"] = True
             models_to_try.append(fallback)

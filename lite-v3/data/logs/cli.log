@@ -1,0 +1,15 @@
+[2026-05-23 09:45:52] empire.cli ERROR: 执行失败: name 'models' is not defined
+Traceback (most recent call last):
+  File "/root/.openclaw/workspace/Empire-Architecture/lite-v3/main.py", line 77, in execute_command
+    result = await self.chancellor.receive_command(command, autonomous=autonomous)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.openclaw/workspace/Empire-Architecture/lite-v3/chancellor.py", line 192, in receive_command
+    plan = await self._plan(task_id, command, knowledge_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.openclaw/workspace/Empire-Architecture/lite-v3/chancellor.py", line 269, in _plan
+    result = await chancellor.call_llm(plan_prompt)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.openclaw/workspace/Empire-Architecture/lite-v3/agents/base.py", line 94, in call_llm
+    fallback = models.get("mimo", {}).copy()
+               ^^^^^^
+NameError: name 'models' is not defined
